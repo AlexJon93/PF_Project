@@ -21,10 +21,9 @@ mongo_files = {
 
 def run_exports():
     """entry point for the script, calls all the various export methods"""
-    from postgres_tables import table_queries
 
     print('Exporting to postgres')
-    init_postgres(table_queries)
+    init_postgres('db_scripts/postgres_tables.sql')
     for key in postgres_files:
         if not export_postgres(postgres_files[key], key):
             print(f'Issue with populating table: {key}')
@@ -70,7 +69,7 @@ def export_postgres(file, table):
     return True    
     
 
-def init_postgres(queries):
+def init_postgres(file):
     """
     Initialises the tables for the postgresql DB
 
@@ -85,8 +84,7 @@ def init_postgres(queries):
         conn = psycopg2.connect(f"dbname={os.getenv('DBNAME')} user={os.getenv('DBUSER')}")
 
         curr = conn.cursor()
-        for query in queries:
-            curr.execute(query)
+        curr.execute(open(file, 'r').read())
         conn.commit()
         curr.close()
         
