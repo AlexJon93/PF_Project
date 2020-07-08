@@ -27,16 +27,18 @@ def get_orders():
             '''
         )
         
+        # fetches all rows from query execution
         orders = []
         for row in curr.fetchall():
-            # double and datetime values not supported by json so casting needed
+            # casting values in json serializable forms
             row['total_amount'] = 0 if row['total_amount'] is None else str(row['total_amount'])
             row['delivered_amount'] = '-' if row['delivered_amount'] is None else str(row['delivered_amount'])
+            row['created_at'] = str(row['created_at'])
 
+            # add customer details from mongodb into row dict
             customer = get_customer(row.pop('customer_id'))
             row['customer_company'] = customer['company']['company_name']
             row['customer_name'] = customer['name']
-            row['created_at'] = str(row['created_at'])
             orders.append(dict(row))
         return orders
     except psycopg2.Error as err:
