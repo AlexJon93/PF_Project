@@ -1,10 +1,16 @@
 <template>
     <div>
-        <ul>
-            <li v-for="customer in customers" :key="customer.id">
-                <OrderListItem v-bind:customer="customer"/>
-            </li>
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Company</th>
+                    <th>Customer Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <order-list-item v-for="order in orders" :key="order.id" v-bind:order="order"/>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -17,7 +23,7 @@ export default {
         OrderListItem
     },
     props: {
-        customers: Array
+        orders: Array
     }
 }
 </script>

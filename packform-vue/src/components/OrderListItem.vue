@@ -1,14 +1,15 @@
 <template>
-    <div>
-        {{ customer.customer_name }}
-    </div>
+    <tr>
+        <td>{{ order.customer_company }}</td>
+        <td>{{ order.customer_name }}</td>
+    </tr>
 </template>
 
 <script>
 export default {
     name: "OrderListItem",
     props: {
-        customer: Object
+        order: Object
     }
 }
 </script>
