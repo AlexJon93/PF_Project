@@ -3,8 +3,12 @@
         <table>
             <thead>
                 <tr>
+                    <th>Order Name</th>
                     <th>Customer Company</th>
                     <th>Customer Name</th>
+                    <th>Order Date</th>
+                    <th>Delivered Amount</th>
+                    <th>Total Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,3 +31,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+    table{
+        border-spacing: 2em 0.2em;
+    }
+</style>

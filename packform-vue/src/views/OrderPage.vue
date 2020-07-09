@@ -1,21 +1,24 @@
 <template>
     <div>
-        <order-list v-bind:orders="orders"/>
+        <div v-if="loading"><spinner/></div>
+        <div v-else><order-list v-bind:orders="orders"/></div>        
     </div>
 </template>
 
 <script>
 import OrderList from '../components/OrderList'
+import Spinner from '../components/Spinner'
 
 export default {
     name: 'OrderPage',
     components: {
-        OrderList
+        OrderList,
+        Spinner
     },
     data(){
         return {
             orders: [],
-            loading: false
+            loading: true
         }
     },
     created() {
@@ -23,7 +26,6 @@ export default {
     },
     methods: {
         getOrders(){
-            this.loading = true
             fetch('http://localhost:5000/', {
                 method: 'GET',
                 headers: {
@@ -32,7 +34,6 @@ export default {
             })
             .then(res => res.json())
             .then(orders => {
-                console.log(orders)
                 this.orders = orders
                 this.loading = false
             })
