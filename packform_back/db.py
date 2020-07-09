@@ -19,7 +19,9 @@ def get_orders():
 
         curr.execute(
             '''
-            SELECT orders.order_name, orders.customer_id, orders.created_at, sum(orderItems.price_per_unit * deliveries.delivered_quantity) as delivered_amount, sum(orderItems.price_per_unit * orderItems.quantity) as total_amount
+            SELECT orders.order_name, orders.customer_id, orders.created_at, 
+            sum(orderItems.price_per_unit * deliveries.delivered_quantity) as delivered_amount, 
+            sum(orderItems.price_per_unit * orderItems.quantity) as total_amount
                 from orders, orderItems
                 left join deliveries on deliveries.order_item_id = orderItems.id
                 where orders.id = orderItems.order_id
