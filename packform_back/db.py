@@ -1,9 +1,12 @@
 import psycopg2
 import os
 import json
+import math
 
 from pymongo import MongoClient
 from psycopg2 import extras
+
+PAGE_SIZE = 5
 
 def get_customer(id):
     """Returns given customer object from the mongo db based on id"""
@@ -11,7 +14,7 @@ def get_customer(id):
     collection = mongo.packform.customers
     return collection.find_one({'user_id': id}, projection={'_id': False, 'credit_cards': False, "login": False, "password": False})
 
-def get_orders():
+def get_orders(page, search=None, from_date=None, to_date=None):
     """Gets all orders from postgres db"""
     try:
         conn = psycopg2.connect(f"dbname={os.getenv('DBNAME')} user={os.getenv('DBUSER')}")
@@ -24,9 +27,13 @@ def get_orders():
             sum(orderItems.price_per_unit * orderItems.quantity) as total_amount
                 from orders, orderItems
                 left join deliveries on deliveries.order_item_id = orderItems.id
-                where orders.id = orderItems.order_id
-                group by orders.id, orderItems.order_id;
-            '''
+                where   (orders.id = orderItems.order_id) and 
+                        ((orders.order_name like %(search_like)s or %(search)s is NULL) or (orderItems.product like %(search_like)s or %(search)s is NULL)) and
+                        ((orders.created_at > %(from_date)s or %(from_date)s is NULL) and (orders.created_at < %(to_date)s or %(to_date)s is NULL))
+                group by orders.id, orderItems.order_id
+                order by orders.order_name
+                limit %(limit)s offset %(offset)s;
+            ''', dict(search=search, search_like=f'%{search}%', from_date=from_date, to_date=to_date, limit=PAGE_SIZE, offset=page*PAGE_SIZE)
         )
         
         # fetches all rows from query execution
@@ -43,5 +50,15 @@ def get_orders():
             row['customer_name'] = customer['name']
             orders.append(dict(row))
         return orders
+    except psycopg2.Error as err:
+        print(err)
+
+def get_pages():
+    """gets count of orders in db and returns number of pages from that count"""
+    try:
+        conn = psycopg2.connect(f"dbname={os.getenv('DBNAME')} user={os.getenv('DBUSER')}")
+        curr = conn.cursor()
+        curr.execute('select count(*) from orders;')
+        return math.ceil(curr.fetchone()[0]/PAGE_SIZE)
     except psycopg2.Error as err:
         print(err)
