@@ -1,15 +1,50 @@
-To display:
-- Order name (orders)
-- Customer Company name (customer - mongo)
-- Customer name (customer - mongo)
-- Order date (Melbourne/Australia TZ) (orders)
-- Delivered amount (dash if nothing is delivered) (orderitems + deliveries)
-- Total amount (orderitems + deliveries)
+# PF Project
+### Alex Jarvis
 
-Acceptance criteria:
-- When I open the `/orders` page
-- Then I should see the list of all customer order
-- And I should be able to search orders by part of the order or product name
-- And I should be able to filter orders by date range (Melbourne/Australia TZ)
-- And I should see maximum 5 orders per page
-- And I should be able to switch between pages
+Small project completed as part of an application for the [Packform](https://www.packform.io/) internship
+
+## Dependencies
+```
+Postgresql 12.3
+Mongo 4.2.8
+Python 3.8.3
+npm 6.14.5
+```
+
+## Development Setup
+
+Below are the steps required to get the project up and running.
+
+Before running the database script you need to write an env file in the following format:
+```
+DBNAME=db_name
+DBUSER=db_user
+```
+with your postgresql details.
+
+Once that is created you can run the following commands to get the project installed
+
+```
+<!-- Flask Backend -->
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements
+
+<!-- Vue Front -->
+cd packform-vue
+npm install
+
+<!-- Databases -->
+python db_scripts/export.py
+```
+
+## Running
+
+Below are the commands to get the project running
+```
+source venv/bin/activate
+FLASK_APP=packform_back/app.py flask run
+<!-- Vue front run in seperate terminal -->
+cd packform-vue
+npm run serve
+```

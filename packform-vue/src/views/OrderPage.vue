@@ -1,28 +1,34 @@
 <template>
-    <div class="container orderpage">
-        <input class="row" type="text" placeholder="Search" v-on:keyup="setSearch($event)"/>
-        <div class="row">
-            <label class="fromdate">From: <input type="date" id="from" v-bind:max="this.dates.to" v-on:change="setDate($event)"/></label>
-            <label class="todate">To: <input type="date" id="to" v-bind:min="this.dates.from" v-on:change="setDate($event)" /></label>
+    <main class="wrapper">
+        <div class="container orderpage">
+            <input class="row" type="text" placeholder="Search" v-on:keyup="setSearch($event)"/>
+            <div class="row">
+                <label class="fromdate">From: <input type="date" id="from" v-bind:max="this.dates.to" v-on:change="setDate($event)"/></label>
+                <label class="todate">To: <input type="date" id="to" v-bind:min="this.dates.from" v-on:change="setDate($event)" /></label>
+            </div>
+    
+            <div class="row" v-if="loading"><spinner/></div>
+            <div class="row" v-else><order-list v-bind:orders="orders"/></div>
+            <paginator class="row" v-bind:current-page="this.currentPage" v-bind:total-pages="this.pages" v-on:change-page="this.setPage"/>
         </div>
-
-        <div class="row" v-if="loading"><spinner/></div>
-        <div class="row" v-else><order-list v-bind:orders="orders"/></div>
-        <paginator class="row" v-bind:current-page="this.currentPage" v-bind:total-pages="this.pages" v-on:change-page="this.setPage"/>
-    </div>
+        <div class="gap"></div>
+        <order-footer/>
+    </main>
 </template>
 
 <script>
 import OrderList from '../components/OrderList'
 import Spinner from '../components/Spinner'
 import Paginator from '../components/Paginator'
+import OrderFooter from '../components/OrderFooter'
 
 export default {
     name: 'OrderPage',
     components: {
         OrderList,
         Spinner,
-        Paginator
+        Paginator,
+        OrderFooter
     },
     data(){
         return {
@@ -94,10 +100,18 @@ export default {
 }
 </script>
 <style>
+    .wrapper{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
     .orderpage{
         margin-top: 10vh;
     }
     .fromdate{
         padding-right: 1vw;
+    }
+    .gap{
+        flex-grow: 1 !important;
     }
 </style>
