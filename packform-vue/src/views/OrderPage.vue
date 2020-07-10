@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <input type="text" placeholder="Search" v-on:keyup="setSearch($event)"/>
-        <label>From: <input type="date" id="from" v-bind:max="this.dates.to" v-on:change="setDate($event)"/></label>
-        <label>To: <input type="date" id="to" v-bind:min="this.dates.from" v-on:change="setDate($event)" /></label>
+    <div class="container orderpage">
+        <input class="row" type="text" placeholder="Search" v-on:keyup="setSearch($event)"/>
+        <div class="row">
+            <label class="fromdate">From: <input type="date" id="from" v-bind:max="this.dates.to" v-on:change="setDate($event)"/></label>
+            <label class="todate">To: <input type="date" id="to" v-bind:min="this.dates.from" v-on:change="setDate($event)" /></label>
+        </div>
 
-        <div v-if="loading"><spinner/></div>
-        <div v-else><order-list v-bind:orders="orders"/></div>
-        <paginator v-bind:current-page="this.currentPage" v-bind:total-pages="this.pages" v-on:change-page="this.setPage"/>
+        <div class="row" v-if="loading"><spinner/></div>
+        <div class="row" v-else><order-list v-bind:orders="orders"/></div>
+        <paginator class="row" v-bind:current-page="this.currentPage" v-bind:total-pages="this.pages" v-on:change-page="this.setPage"/>
     </div>
 </template>
 
@@ -75,10 +77,12 @@ export default {
         },
         setSearch(event){
             this.search = event.target.value
+            this.currentPage = 0
             this.getOrders()            
         },
         setDate(event){
             this.dates[event.target.id] = event.target.value
+            this.currentPage = 0
             this.getOrders()
         },
         setPage(position){
@@ -89,3 +93,11 @@ export default {
     }
 }
 </script>
+<style>
+    .orderpage{
+        margin-top: 10vh;
+    }
+    .fromdate{
+        padding-right: 1vw;
+    }
+</style>
