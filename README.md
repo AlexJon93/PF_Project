@@ -35,6 +35,7 @@ cd packform-vue
 npm install
 
 <!-- Databases -->
+cd ..
 python db_scripts/export.py
 ```
 
